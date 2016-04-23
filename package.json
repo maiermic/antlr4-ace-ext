@@ -4,7 +4,7 @@
   "description": "Tokenizer for ACE editor to do syntax highlighting using an ANTLR4 lexer.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "mocha --recursive --ui exports"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,11 @@
   "bugs": {
     "url": "https://github.com/maiermic/antlr4-ace-ext/issues"
   },
-  "homepage": "https://github.com/maiermic/antlr4-ace-ext#readme"
+  "homepage": "https://github.com/maiermic/antlr4-ace-ext#readme",
+  "devDependencies": {
+    "amd-loader": "0.0.5",
+    "antlr4": "^4.5.2",
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5"
+  }
 }

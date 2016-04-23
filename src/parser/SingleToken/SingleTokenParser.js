@@ -5,10 +5,13 @@ var SingleTokenListener = require('./SingleTokenListener').SingleTokenListener;
 var grammarFileName = "SingleToken.g4";
 
 var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
-    "\u0003\u0003\u0007\u0004\u0002\t\u0002\u0003\u0002\u0003\u0002\u0003",
-    "\u0002\u0002\u0002\u0003\u0002\u0002\u0002\u0005\u0002\u0004\u0003\u0002",
-    "\u0002\u0002\u0004\u0005\u0007\u0003\u0002\u0002\u0005\u0003\u0003\u0002",
-    "\u0002\u0002\u0002"].join("");
+    "\u0003\u0003\u000b\u0004\u0002\t\u0002\u0003\u0002\u0007\u0002\u0006",
+    "\n\u0002\f\u0002\u000e\u0002\t\u000b\u0002\u0003\u0002\u0002\u0002\u0003",
+    "\u0002\u0002\u0002\n\u0002\u0007\u0003\u0002\u0002\u0002\u0004\u0006",
+    "\u0007\u0003\u0002\u0002\u0005\u0004\u0003\u0002\u0002\u0002\u0006\t",
+    "\u0003\u0002\u0002\u0002\u0007\u0005\u0003\u0002\u0002\u0002\u0007\b",
+    "\u0003\u0002\u0002\u0002\b\u0003\u0003\u0002\u0002\u0002\t\u0007\u0003",
+    "\u0002\u0002\u0002\u0003\u0007"].join("");
 
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
@@ -62,9 +65,17 @@ function StartContext(parser, parent, invokingState) {
 StartContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 StartContext.prototype.constructor = StartContext;
 
-StartContext.prototype.TOKEN = function() {
-    return this.getToken(SingleTokenParser.TOKEN, 0);
+StartContext.prototype.TOKEN = function(i) {
+	if(i===undefined) {
+		i = null;
+	}
+    if(i===null) {
+        return this.getTokens(SingleTokenParser.TOKEN);
+    } else {
+        return this.getToken(SingleTokenParser.TOKEN, i);
+    }
 };
+
 
 StartContext.prototype.enterRule = function(listener) {
     if(listener instanceof SingleTokenListener ) {
@@ -87,10 +98,19 @@ SingleTokenParser.prototype.start = function() {
 
     var localctx = new StartContext(this, this._ctx, this.state);
     this.enterRule(localctx, 0, SingleTokenParser.RULE_start);
+    var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 2;
-        this.match(SingleTokenParser.TOKEN);
+        this.state = 5;
+        this._errHandler.sync(this);
+        _la = this._input.LA(1);
+        while(_la===SingleTokenParser.TOKEN) {
+            this.state = 2;
+            this.match(SingleTokenParser.TOKEN);
+            this.state = 7;
+            this._errHandler.sync(this);
+            _la = this._input.LA(1);
+        }
     } catch (re) {
     	if(re instanceof antlr4.error.RecognitionException) {
 	        localctx.exception = re;

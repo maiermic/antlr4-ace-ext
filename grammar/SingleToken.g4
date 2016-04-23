@@ -1,5 +1,5 @@
 grammar SingleToken;
 
-start : TOKEN ;
+start : TOKEN* ;
 
 TOKEN : 'token' ;

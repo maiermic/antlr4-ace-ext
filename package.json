@@ -4,6 +4,8 @@
   "description": "Tokenizer for ACE editor to do syntax highlighting using an ANTLR4 lexer.",
   "main": "index.js",
   "scripts": {
+    "build": "npm run build-grammars",
+    "build-grammars": "antlr4 -Dlanguage=JavaScript grammar/SingleToken.g4 -o src/parser/SingleToken",
     "test": "mocha --recursive --ui exports"
   },
   "repository": {

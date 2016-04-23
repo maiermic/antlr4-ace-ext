@@ -8,9 +8,12 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
   };
 
   (function () {
-    this.getLineTokens = function getLineTokens() {
+    this.getLineTokens = function getLineTokens(line) {
+      var tokens = (line === '')
+        ? []
+        : [ { type: 'text', value: line } ];
       return {
-        tokens: [],
+        tokens: tokens,
         state: 'start'
       };
     };

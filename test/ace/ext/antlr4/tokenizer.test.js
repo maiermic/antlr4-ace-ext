@@ -5,6 +5,7 @@ if (typeof process !== 'undefined') {
 
 const assert = require('chai').assert;
 const M = require('../../../../src/ace/ext/antlr4/tokenizer');
+const SingleTokenLexer = require('../../../../src/parser/SingleToken/SingleTokenLexer').SingleTokenLexer;
 
 module.exports = {
   'tokenizer': {
@@ -19,6 +20,18 @@ module.exports = {
             tokenizer.getLineTokens(''),
             {
               tokens: [],
+              state: 'start'
+            }
+          );
+        },
+        'gets single token': function () {
+          var tokenizer = new M.Antlr4Tokenizer(SingleTokenLexer);
+          assert.deepEqual(
+            tokenizer.getLineTokens('token'),
+            {
+              tokens: [
+                { type: 'text', value: 'token' }
+              ],
               state: 'start'
             }
           );

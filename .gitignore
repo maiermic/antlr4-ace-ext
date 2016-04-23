@@ -41,6 +41,7 @@ jspm_packages
 
 # User-specific stuff:
 /.idea
+/*.iml
 
 ## File-based project format:
 *.iws

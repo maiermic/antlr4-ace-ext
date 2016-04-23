@@ -14,8 +14,8 @@ module.exports = {
         new M.Antlr4Tokenizer();
       },
       'getLineTokens': {
-        'returns an object containing properties: tokens and state': function () {
-          var tokenizer = new M.Antlr4Tokenizer();
+        'gets empty token list of empty line': function () {
+          var tokenizer = new M.Antlr4Tokenizer(SingleTokenLexer);
           assert.deepEqual(
             tokenizer.getLineTokens(''),
             {

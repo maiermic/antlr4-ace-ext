@@ -35,7 +35,35 @@ module.exports = {
               state: 'start'
             }
           );
+        },
+        'get multiple tokens': function () {
+          var tokenizer = new M.Antlr4Tokenizer(SingleTokenLexer);
+          assert.deepEqual(
+            tokenizer.getLineTokens('tokentoken'),
+            {
+              tokens: [
+                { type: 'text', value: 'token' },
+                { type: 'text', value: 'token' }
+              ],
+              state: 'start'
+            }
+          );
         }
+      }
+    },
+    mapCommonTokenToAceToken: {
+      'should map CommonToken to ACE token format': function () {
+        var commonToken = {
+          type: 1,
+          text: 'token'
+        };
+        assert.deepEqual(
+          M.mapCommonTokenToAceToken(commonToken),
+          {
+            type: 'text',
+            value: 'token'
+          }
+        );
       }
     }
   }

@@ -3,10 +3,12 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
 
   var antlr4 = require('antlr4/index');
 
-  const SkippedTokenType = -1;
+  const SkippedAntlrTokenType = -1;
+  const DefaultAceTokenType = 'text';
 
-  var Antlr4Tokenizer = function (Lexer) {
+  var Antlr4Tokenizer = function (Lexer, antlrTokenNameToAceTokenType) {
     this.Lexer = Lexer;
+    this.antlrTokenNameToAceTokenType = antlrTokenNameToAceTokenType || {};
   };
 
   (function () {
@@ -14,18 +16,43 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
       var stream = new antlr4.InputStream(line);
       var lexer = new this.Lexer(stream);
       var commonTokens = lexer.getAllTokens();
+      var changeTokenTypeToAceType = changeTokenType(
+        this.mapAntlrTokenTypeToAceType.bind(this)
+      );
       var tokens = insertSkippedTokens(commonTokens, line)
-        .map(mapCommonTokenToAceToken);
+        .map(mapCommonTokenToAceToken)
+        .map(changeTokenTypeToAceType);
       return {
         tokens: tokens,
         state: 'start'
       };
     };
+
+    this.getAntlrTokenName = function getAntlrTokenName(tokenType) {
+      return this.Lexer.symbolicNames[tokenType] ||
+        this.Lexer.literalNames[tokenType];
+    };
+
+    this.mapAntlrTokenNameToAceType = function mapAntlrTokenNameToAceType(tokenName) {
+      return this.antlrTokenNameToAceTokenType[tokenName] || DefaultAceTokenType;
+    };
+
+    this.mapAntlrTokenTypeToAceType = function mapAntlrTokenTypeToAceType(tokenType) {
+      return this.mapAntlrTokenNameToAceType(this.getAntlrTokenName(tokenType));
+    };
+
   }).call(Antlr4Tokenizer.prototype);
+
+  function changeTokenType(mapType) {
+    return function (token) {
+      token.type = mapType(token.type);
+      return token;
+    };
+  }
 
   function mapCommonTokenToAceToken(commonToken) {
     return {
-      type: 'text',
+      type: commonToken.type,
       value: commonToken.text
     };
   }
@@ -37,7 +64,7 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
       skippedText = line.substring(nextTokenColumn, token.column);
       if (skippedText !== '') {
         acc.push({
-          type: SkippedTokenType,
+          type: SkippedAntlrTokenType,
           text: skippedText,
           column: nextTokenColumn
         });
@@ -50,7 +77,7 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
     skippedText = line.substr(nextTokenColumn);
     if (skippedText !== '') {
       allTokens.push({
-        type: SkippedTokenType,
+        type: SkippedAntlrTokenType,
         text: skippedText,
         column: nextTokenColumn
       });
@@ -63,8 +90,10 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
   }
 
   module.exports = {
-    SkippedTokenType: SkippedTokenType,
+    SkippedAntlrTokenType: SkippedAntlrTokenType,
+    DefaultAceTokenType: DefaultAceTokenType,
     Antlr4Tokenizer: Antlr4Tokenizer,
+    changeTokenType: changeTokenType,
     mapCommonTokenToAceToken: mapCommonTokenToAceToken,
     insertSkippedTokens: insertSkippedTokens,
     getEndColumnOfToken: getEndColumnOfToken

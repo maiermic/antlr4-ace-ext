@@ -5,6 +5,7 @@ if (typeof process !== 'undefined') {
 
 const assert = require('chai').assert;
 const M = require('../../../../src/ace/ext/antlr4/tokenizer');
+const VariableDeclarationLexer = require('../../../../src/parser/VariableDeclaration/VariableDeclarationLexer').VariableDeclarationLexer;
 const SingleTokenLexer = require('../../../../src/parser/SingleToken/SingleTokenLexer').SingleTokenLexer;
 const SkippedTokenLexer = require('../../../../src/parser/SkippedToken/SkippedTokenLexer').SkippedTokenLexer;
 
@@ -31,7 +32,7 @@ module.exports = {
             tokenizer.getLineTokens('token'),
             {
               tokens: [
-                {type: 'text', value: 'token'}
+                {type: M.DefaultAceTokenType, value: 'token'}
               ],
               state: 'start'
             }
@@ -43,8 +44,8 @@ module.exports = {
             tokenizer.getLineTokens('tokentoken'),
             {
               tokens: [
-                {type: 'text', value: 'token'},
-                {type: 'text', value: 'token'}
+                {type: M.DefaultAceTokenType, value: 'token'},
+                {type: M.DefaultAceTokenType, value: 'token'}
               ],
               state: 'start'
             }
@@ -57,7 +58,7 @@ module.exports = {
               tokenizer.getLineTokens('   '),
               {
                 tokens: [
-                  {type: 'text', value: '   '}
+                  {type: M.DefaultAceTokenType, value: '   '}
                 ],
                 state: 'start'
               }
@@ -69,8 +70,8 @@ module.exports = {
               tokenizer.getLineTokens('    token'),
               {
                 tokens: [
-                  {type: 'text', value: '    '},
-                  {type: 'text', value: 'token'}
+                  {type: M.DefaultAceTokenType, value: '    '},
+                  {type: M.DefaultAceTokenType, value: 'token'}
                 ],
                 state: 'start'
               }
@@ -82,9 +83,9 @@ module.exports = {
               tokenizer.getLineTokens('token token'),
               {
                 tokens: [
-                  {type: 'text', value: 'token'},
-                  {type: 'text', value: ' '},
-                  {type: 'text', value: 'token'}
+                  {type: M.DefaultAceTokenType, value: 'token'},
+                  {type: M.DefaultAceTokenType, value: ' '},
+                  {type: M.DefaultAceTokenType, value: 'token'}
                 ],
                 state: 'start'
               }
@@ -96,14 +97,113 @@ module.exports = {
               tokenizer.getLineTokens('token  '),
               {
                 tokens: [
-                  {type: 'text', value: 'token'},
-                  {type: 'text', value: '  '}
+                  {type: M.DefaultAceTokenType, value: 'token'},
+                  {type: M.DefaultAceTokenType, value: '  '}
                 ],
                 state: 'start'
               }
             );
           }
+        },
+        'maps ANTLR4 token type to ACE token type': {
+          'using token type to name map': function () {
+            // see src/VariableDeclaration/VariableDeclaration.tokens
+            var antlrTokenNameToAceTokenType = {
+              "'='":     'keyword.operator', 
+              "';'":     'punctuation.operator', 
+              "'float'": 'storage.type', 
+              "'int'":   'storage.type', 
+              "ID":      'identifier', 
+              "NUMBER":  'constant.numeric' 
+            };
+            var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer, antlrTokenNameToAceTokenType);
+            assert.deepEqual(
+              tokenizer.getLineTokens('int x = 42;'),
+              {
+                tokens: [
+                  {type: 'storage.type',         value: 'int'},
+                  {type: M.DefaultAceTokenType,  value: ' '},
+                  {type: 'identifier',           value: 'x'},
+                  {type: M.DefaultAceTokenType,  value: ' '},
+                  {type: 'keyword.operator',     value: '='},
+                  {type: M.DefaultAceTokenType,  value: ' '},
+                  {type: 'constant.numeric',     value: '42'},
+                  {type: 'punctuation.operator', value: ';'}
+                ],
+                state: 'start'
+              }
+            )
+          }
         }
+      },
+      getAntlrTokenName: {
+        'of symbolic name': function () {
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer);
+          assert.equal(
+            tokenizer.getAntlrTokenName(VariableDeclarationLexer.ID),
+            'ID'
+          );
+        },
+        'of literal name': function () {
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer);
+          assert.equal(
+            tokenizer.getAntlrTokenName(VariableDeclarationLexer.T__0),
+            "'='"
+          );
+        }
+      },
+      mapAntlrTokenNameToAceType: {
+        'of defined name': function () {
+          var antlrTokenNameToAceTokenType = {
+            'ID': 'identifier'
+          };
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer, antlrTokenNameToAceTokenType);
+          assert.equal(
+            tokenizer.mapAntlrTokenNameToAceType('ID'),
+            'identifier'
+          );
+        },
+        'of undefined name returns default type': function () {
+          var antlrTokenNameToAceTokenType = {
+            'ID': 'identifier'
+          };
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer, antlrTokenNameToAceTokenType);
+          assert.equal(
+            tokenizer.mapAntlrTokenNameToAceType('NUMBER'),
+            M.DefaultAceTokenType
+          );
+        }
+      },
+      mapAntlrTokenTypeToAceType: {
+        'of non skipped token': function () {
+          var antlrTokenNameToAceTokenType = {
+            'ID': 'identifier'
+          };
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer, antlrTokenNameToAceTokenType);
+          assert.equal(
+            tokenizer.mapAntlrTokenTypeToAceType(VariableDeclarationLexer.ID),
+            'identifier'
+          );
+        },
+        'of skipped token returns default type': function () {
+          var tokenizer = new M.Antlr4Tokenizer(VariableDeclarationLexer);
+          assert.equal(
+            tokenizer.mapAntlrTokenTypeToAceType(M.SkippedAntlrTokenType),
+            M.DefaultAceTokenType
+          );
+        }
+      }
+    },
+    changeTokenType: {
+      'should change type of token': function () {
+        var token = { type: 'oldType', value: 'whatever' };
+        function mapToNewType() {
+          return 'newType';
+        }
+        assert.deepEqual(
+          M.changeTokenType(mapToNewType)(token),
+          { type: 'newType', value: 'whatever' }
+        );
       }
     },
     mapCommonTokenToAceToken: {
@@ -115,7 +215,7 @@ module.exports = {
         assert.deepEqual(
           M.mapCommonTokenToAceToken(commonToken),
           {
-            type: 'text',
+            type: 1,
             value: 'token'
           }
         );
@@ -133,11 +233,11 @@ module.exports = {
         ];
         var allTokensInLine = [
           {type: 4, start: 0, stop: 2, line: 1, column: 0, text: 'int'},
-          {type: M.SkippedTokenType, column: 3, text: ' '},
+          {type: M.SkippedAntlrTokenType, column: 3, text: ' '},
           {type: 22, start: 4, stop: 4, line: 1, column: 4, text: 'g'},
-          {type: M.SkippedTokenType, column: 5, text: ' '},
+          {type: M.SkippedAntlrTokenType, column: 5, text: ' '},
           {type: 1, start: 6, stop: 6, line: 1, column: 6, text: '='},
-          {type: M.SkippedTokenType, column: 7, text: ' '},
+          {type: M.SkippedAntlrTokenType, column: 7, text: ' '},
           {type: 23, start: 8, stop: 8, line: 1, column: 8, text: '9'},
           {type: 2, start: 9, stop: 9, line: 1, column: 9, text: ';'}
         ];

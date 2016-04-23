@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build-grammars",
-    "build-grammars": "npm run build-grammar-SingleToken && npm run build-grammar-SkippedToken",
+    "build-grammars": "npm run build-grammar-VariableDeclaration && npm run build-grammar-SingleToken && npm run build-grammar-SkippedToken",
+    "build-grammar-VariableDeclaration": "antlr4 -Dlanguage=JavaScript grammar/VariableDeclaration.g4 -o src/parser/VariableDeclaration",
     "build-grammar-SingleToken": "antlr4 -Dlanguage=JavaScript grammar/SingleToken.g4 -o src/parser/SingleToken",
     "build-grammar-SkippedToken": "antlr4 -Dlanguage=JavaScript grammar/SkippedToken.g4 -o src/parser/SkippedToken",
     "test": "mocha --recursive --ui exports"

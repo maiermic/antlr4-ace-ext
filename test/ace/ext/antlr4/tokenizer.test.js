@@ -11,6 +11,18 @@ module.exports = {
     'Antlr4Tokenizer': {
       'is constructor': function () {
         new M.Antlr4Tokenizer();
+      },
+      'getLineTokens': {
+        'returns an object containing properties: tokens and state': function () {
+          var tokenizer = new M.Antlr4Tokenizer();
+          assert.deepEqual(
+            tokenizer.getLineTokens(''),
+            {
+              tokens: [],
+              state: 'start'
+            }
+          );
+        }
       }
     }
   }

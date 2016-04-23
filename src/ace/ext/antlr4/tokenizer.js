@@ -2,8 +2,12 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
   "use strict";
 
   var antlr4 = require('antlr4/index');
-  
+
+  var Antlr4Tokenizer = function () {
+    // constructor
+  };
+
   module.exports = {
-    antlr4IsDefined: !!antlr4
+    Antlr4Tokenizer: Antlr4Tokenizer
   }
 });

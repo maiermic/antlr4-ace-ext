@@ -8,9 +8,9 @@ const M = require('../../../../src/ace/ext/antlr4/tokenizer');
 
 module.exports = {
   'tokenizer': {
-    'module': {
-      'is defined': function () {
-        assert.isTrue(M.antlr4IsDefined);
+    'Antlr4Tokenizer': {
+      'is constructor': function () {
+        new M.Antlr4Tokenizer();
       }
     }
   }

@@ -9,12 +9,12 @@ const SingleTokenLexer = require('../../../../src/parser/SingleToken/SingleToken
 const SkippedTokenLexer = require('../../../../src/parser/SkippedToken/SkippedTokenLexer').SkippedTokenLexer;
 
 module.exports = {
-  'tokenizer': {
-    'Antlr4Tokenizer': {
+  tokenizer: {
+    Antlr4Tokenizer: {
       'is constructor': function () {
         new M.Antlr4Tokenizer();
       },
-      'getLineTokens': {
+      getLineTokens: {
         'gets empty token list of empty line': function () {
           var tokenizer = new M.Antlr4Tokenizer(SingleTokenLexer);
           assert.deepEqual(

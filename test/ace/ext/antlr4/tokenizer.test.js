@@ -39,7 +39,7 @@ module.exports = {
             }
           );
         },
-        'get multiple tokens': function () {
+        'gets multiple tokens': function () {
           var tokenizer = new M.Antlr4Tokenizer(SingleTokenLexer);
           assert.deepEqual(
             tokenizer.getLineTokens('tokentoken'),
@@ -52,7 +52,7 @@ module.exports = {
             }
           );
         },
-        'gets token that contains line feed': function () {
+        'gets single line token that contains line feed': function () {
           var antlrTokenNameToAceTokenType = {
             COMMENT: 'comment'
           };
@@ -68,7 +68,7 @@ module.exports = {
             }
           );
         },
-        'get skipped tokens': {
+        'gets skipped tokens': {
           'of line that contains only skipped tokens': function () {
             var tokenizer = new M.Antlr4Tokenizer(SkippedTokenLexer);
             assert.deepEqual(

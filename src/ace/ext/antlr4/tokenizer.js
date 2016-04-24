@@ -6,6 +6,35 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
   const SkippedAntlrTokenType = -1;
   const DefaultAceTokenType = 'text';
 
+  /**
+   * Map of ANTLR4 token name to ACE token type.
+   * Describes which ANTLR4 token name refers to which ACE token type ({@link https://github.com/ajaxorg/ace/wiki/Creating-or-Extending-an-Edit-Mode#common-tokens see common ACE tokens}).
+   *
+   * @typedef {Object.<string, string>} AntlrTokenNameToAceTokenTypeMap
+   *
+   * @example
+   * <pre><code>
+   * {
+   *   "'+'": 'keyword.operator',
+   *   "'-'": 'keyword.operator',
+   *   "'return'": 'keyword.control',
+   *   "ID": 'identifier',
+   *   "INT": 'constant.numeric'
+   * }
+   * </pre></code>
+   */
+
+  /**
+   * Tokenizer for the ACE editor that uses an ANTLR4 lexer.
+   *
+   * @param Lexer
+   * An ANTLR4 lexer class that should be used to tokenize lines of code.
+   *
+   * @param {AntlrTokenNameToAceTokenTypeMap} antlrTokenNameToAceTokenType
+   * Description of the syntax highlighting rules.
+   *
+   * @constructor
+   */
   var Antlr4Tokenizer = function (Lexer, antlrTokenNameToAceTokenType) {
     this.Lexer = Lexer;
     this.antlrTokenNameToAceTokenType = antlrTokenNameToAceTokenType || {};

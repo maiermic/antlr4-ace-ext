@@ -1,6 +1,37 @@
 ace.define('ace/ext/antlr4/token-type-map', [], function (require, exports, module) {
   "use strict";
 
+  /**
+   * Create a token type map for an Antlr4Tokenizer.
+   *
+   * @example
+   * <pre><code>
+   * var map = createTokenTypeMap({
+   *   literals: {
+   *     'keyword.operator': ['+', '-'],
+   *     'keyword.control': 'return'
+   *   },
+   *   symbols: {
+   *     'identifier': 'ID',
+   *     'constant.numeric': 'INT'
+   *   }
+   * });
+   * var tokenizer = new Antlr4Tokenizer(MyLexer, tokenTypeToNameMap);
+   * </pre></code>
+   *
+   * @param mapping
+   * An object that maps ACE token types to ANTLR4 token names.
+   *
+   * @param {Object.<string, (string|string[])>} mapping.literals
+   * An object that maps ACE token types to ANTLR4 literal tokens.
+   * Literal tokens are not enclosed in quotes.
+   * That means instead of <code>"'+'"</code> you just write <code>"+"</code>.
+   *
+   * @param {Object.<string, (string|string[])>} mapping.symbols
+   * An object that maps ACE token types to ANTLR4 symbol tokens.
+   *
+   * @returns {AntlrTokenNameToAceTokenTypeMap}
+   */
   function createTokenTypeMap(mapping) {
     var literals = mapLiterals(mapping.literals);
     var symbols = mapSymbols(mapping.symbols);

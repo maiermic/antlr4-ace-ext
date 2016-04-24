@@ -13,9 +13,15 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
 
   (function () {
     this.getLineTokens = function getLineTokens(line) {
-      var stream = new antlr4.InputStream(line);
+      var stream = new antlr4.InputStream(line + '\n');
       var lexer = new this.Lexer(stream);
+
+      // added line feed might cause token recognition error
+      // that should be ignored (not logged)
+      lexer.removeErrorListeners();
+
       var commonTokens = lexer.getAllTokens();
+      removeLineFeedOfLastCommonTokenValue(commonTokens);
       var changeTokenTypeToAceType = changeTokenType(
         this.mapAntlrTokenTypeToAceType.bind(this)
       );
@@ -43,6 +49,13 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
 
   }).call(Antlr4Tokenizer.prototype);
 
+  function removeLineFeedOfLastCommonTokenValue(commonTokens) {
+    if (commonTokens.length > 0) {
+      var last = commonTokens[commonTokens.length - 1];
+      last.text = last.text.replace('\n', '');
+    }
+  }
+  
   function changeTokenType(mapType) {
     return function (token) {
       token.type = mapType(token.type);
@@ -93,6 +106,7 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
     SkippedAntlrTokenType: SkippedAntlrTokenType,
     DefaultAceTokenType: DefaultAceTokenType,
     Antlr4Tokenizer: Antlr4Tokenizer,
+    removeLineFeedOfLastCommonTokenValue: removeLineFeedOfLastCommonTokenValue,
     changeTokenType: changeTokenType,
     mapCommonTokenToAceToken: mapCommonTokenToAceToken,
     insertSkippedTokens: insertSkippedTokens,

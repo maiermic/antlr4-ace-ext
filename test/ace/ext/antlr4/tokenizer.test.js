@@ -8,6 +8,7 @@ const M = require('../../../../src/ace/ext/antlr4/tokenizer');
 const VariableDeclarationLexer = require('../../../../src/parser/VariableDeclaration/VariableDeclarationLexer').VariableDeclarationLexer;
 const SingleTokenLexer = require('../../../../src/parser/SingleToken/SingleTokenLexer').SingleTokenLexer;
 const SkippedTokenLexer = require('../../../../src/parser/SkippedToken/SkippedTokenLexer').SkippedTokenLexer;
+const TokenWithLineFeedLexer = require('../../../../src/parser/TokenWithLineFeed/TokenWithLineFeedLexer').TokenWithLineFeedLexer;
 
 module.exports = {
   tokenizer: {
@@ -46,6 +47,22 @@ module.exports = {
               tokens: [
                 {type: M.DefaultAceTokenType, value: 'token'},
                 {type: M.DefaultAceTokenType, value: 'token'}
+              ],
+              state: 'start'
+            }
+          );
+        },
+        'gets token that contains line feed': function () {
+          var antlrTokenNameToAceTokenType = {
+            COMMENT: 'comment'
+          };
+          var tokenizer = new M.Antlr4Tokenizer(TokenWithLineFeedLexer, antlrTokenNameToAceTokenType);
+          var line = '// line feed is not part of line';
+          assert.deepEqual(
+            tokenizer.getLineTokens(line),
+            {
+              tokens: [
+                {type: 'comment', value: line}
               ],
               state: 'start'
             }
@@ -192,6 +209,55 @@ module.exports = {
             M.DefaultAceTokenType
           );
         }
+      }
+    },
+    removeLineFeedOfLastCommonTokenValue: {
+      'of empty token array does nothing': function () {
+        var commonTokens = [];
+        M.removeLineFeedOfLastCommonTokenValue(commonTokens);
+        assert.deepEqual(commonTokens, []);
+      },
+      'that contains line feed': function () {
+        var commonTokens = [
+          {text: 'int'},
+          {text: 'g'},
+          {text: '='},
+          {text: '9'},
+          {text: ';'},
+          {text: '// line feed should be removed\n'}
+        ];
+        M.removeLineFeedOfLastCommonTokenValue(commonTokens);
+        assert.deepEqual(
+          commonTokens,
+          [
+            {text: 'int'},
+            {text: 'g'},
+            {text: '='},
+            {text: '9'},
+            {text: ';'},
+            {text: '// line feed should be removed'}
+          ]
+        );
+      },
+      'that contains no line feed': function () {
+        var commonTokens = [
+          {text: 'int'},
+          {text: 'g'},
+          {text: '='},
+          {text: '9'},
+          {text: ';'}
+        ];
+        M.removeLineFeedOfLastCommonTokenValue(commonTokens);
+        assert.deepEqual(
+          commonTokens,
+          [
+            {text: 'int'},
+            {text: 'g'},
+            {text: '='},
+            {text: '9'},
+            {text: ';'}
+          ]
+        );
       }
     },
     changeTokenType: {

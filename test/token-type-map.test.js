@@ -4,7 +4,7 @@ if (typeof process !== 'undefined') {
 }
 
 const assert = require('chai').assert;
-const M = require('../../../../src/ace/ext/antlr4/token-type-map');
+const M = require('../src/token-type-map');
 
 module.exports = {
   'token-type-map': {

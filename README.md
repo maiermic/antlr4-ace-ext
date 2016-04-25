@@ -2,14 +2,34 @@
 
 Tokenizer for [ACE editor][ACE editor] to do syntax highlighting using an [ANTLR4][ANTLR4] lexer.
 
+## How to install
+
+Use bower to install:
+
+```sh
+bower install --save antlr4-ace-ext
+```
+
+You can install ACE editor from bower, too:
+
+```sh
+bower install --save ace-builds
+```
+
 
 ## How to use
 
-After `ace` is loaded, add scripts: 
+After `ace` is loaded
 
 ```html
-<script src="antlr4-ace-ext/src/token-type-map.js"></script>
-<script src="antlr4-ace-ext/src/tokenizer.js"></script>
+<script src="bower_components/ace-builds/src-noconflict/ace.js"></script>
+```
+
+add scripts: 
+
+```html
+<script src="bower_components/antlr4-ace-ext/src/token-type-map.js"></script>
+<script src="bower_components/antlr4-ace-ext/src/tokenizer.js"></script>
 ```
 
 They register themselves as ACE modules `ace/ext/antlr4/tokenizer` and `ace/ext/antlr4/token-type-map`. You can require them in your mode:

@@ -2,7 +2,7 @@
   "name": "antlr4-ace-ext",
   "version": "1.0.0",
   "description": "Tokenizer for ACE editor to do syntax highlighting using an ANTLR4 lexer.",
-  "main": "index.js",
+  "main": "src/tokenizer.js",
   "scripts": {
     "build": "npm run build-grammars",
     "build-grammars": "npm run build-grammar-VariableDeclaration && npm run build-grammar-SingleToken && npm run build-grammar-SkippedToken && npm run build-grammar-TokenWithLineFeed",

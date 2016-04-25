@@ -5,10 +5,10 @@ if (typeof process !== 'undefined') {
 
 const assert = require('chai').assert;
 const M = require('../src/tokenizer');
-const VariableDeclarationLexer = require('../src/parser/VariableDeclaration/VariableDeclarationLexer').VariableDeclarationLexer;
-const SingleTokenLexer = require('../src/parser/SingleToken/SingleTokenLexer').SingleTokenLexer;
-const SkippedTokenLexer = require('../src/parser/SkippedToken/SkippedTokenLexer').SkippedTokenLexer;
-const TokenWithLineFeedLexer = require('../src/parser/TokenWithLineFeed/TokenWithLineFeedLexer').TokenWithLineFeedLexer;
+const VariableDeclarationLexer = require('../parser/VariableDeclaration/VariableDeclarationLexer').VariableDeclarationLexer;
+const SingleTokenLexer = require('../parser/SingleToken/SingleTokenLexer').SingleTokenLexer;
+const SkippedTokenLexer = require('../parser/SkippedToken/SkippedTokenLexer').SkippedTokenLexer;
+const TokenWithLineFeedLexer = require('../parser/TokenWithLineFeed/TokenWithLineFeedLexer').TokenWithLineFeedLexer;
 
 module.exports = {
   tokenizer: {

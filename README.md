@@ -6,7 +6,7 @@ Tokenizer for [ACE editor][ACE editor] to do syntax highlighting using an [ANTLR
  
 ### Required
 
-- [Node.JS](https://nodejs.org) (to run tests)
+- [Node.JS](https://nodejs.org)
 - [ANTLR4](http://www.antlr.org/download.html) (`antlr4` has to be available as environment variable to (re-) build grammar files)  
 
 ### Build Instructions

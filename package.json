@@ -18,12 +18,13 @@
   },
   "keywords": [
     "ace",
-    "ace editor",
+    "editor",
     "antlr",
     "antlr4",
     "lexer",
     "tokenizer",
-    "syntax highlighting"
+    "syntax",
+    "highlighting"
   ],
   "author": "Michael Maier",
   "license": "ISC",
